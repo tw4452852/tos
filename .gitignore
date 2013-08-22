@@ -1,0 +1,5 @@
+*.txt
+*.swp
+*.o
+boot.bin
+hd.img
