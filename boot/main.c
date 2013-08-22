@@ -3,5 +3,5 @@
 void
 cmain()
 {
-	tw_print("hello tw-32\n");
+	tw_puts("hello cmain\n");
 }

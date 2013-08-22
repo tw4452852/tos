@@ -4,12 +4,10 @@
 gdt: descriptor 0, 0, 0
 desc_code32: descriptor 0, 0xffffffff, GDT_CODE_PL0
 desc_data32: descriptor 0, 0xffffffff, GDT_DATA_PL0
-desc_video: descriptor 0xb8000, 0xffff, GDT_DATA_PL0
 .set gdt_len, .-gdt
 
 .set sel_code32, desc_code32 - gdt
 .set sel_data32, desc_data32 - gdt
-.set sel_video, desc_video - gdt
 gdt_ptr:
 	.word gdt_len - 1
 gdt_addr:
@@ -52,11 +50,10 @@ _start:
 _start_32:
 	movw $sel_data32, %ax
 	movw %ax, %ds
-	movw %ax, %ss
 	movw %ax, %es
 	movw %ax, %fs
-	movw $sel_video, %ax
 	movw %ax, %gs
+	movw %ax, %ss
 	movl $0X1000000, %esp # 256byte stack
 
 	call cmain

@@ -3,3 +3,4 @@
 *.o
 boot.bin
 hd.img
+orange/

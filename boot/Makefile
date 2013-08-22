@@ -1,5 +1,5 @@
 TARGET=boot.bin
-OBJS=boot.o util.o main.o
+OBJS=boot.o util.o main.o video.o
 LDSCRIPT=boot.ld
 LDFLAGS=-T $(LDSCRIPT)
 ASFLAGS=--32

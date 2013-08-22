@@ -43,25 +43,25 @@ read_sect:
 
 .code32
 .section .text
-# tw_print(s string)
-.type tw_print, @function
-.globl tw_print
-tw_print:
-	pushl %ebp
-	movl %esp, %ebp
-	
-	nop
-
-	leave
-	ret
-
+# tw_memset(char *s, char v, int l)
 .type tw_memset, @function
 .globl tw_memset
 tw_memset:
 	pushl %ebp
 	movl %esp, %ebp
 
-	nop
+	pushl %eax
+	pushl %edi
+	pushl %ecx
+	
+	movl 8(%ebp), %edi
+	movb 12(%ebp), %al
+	movl 16(%ebp), %ecx
+	rep stosb
+
+	popl %ecx
+	popl %ebx
+	popl %eax
 
 	leave
 	ret
