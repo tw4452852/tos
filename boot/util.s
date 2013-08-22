@@ -40,28 +40,3 @@ read_sect:
 	int $0x13
 	leave
 	ret
-
-.code32
-.section .text
-# tw_memset(char *s, char v, int l)
-.type tw_memset, @function
-.globl tw_memset
-tw_memset:
-	pushl %ebp
-	movl %esp, %ebp
-
-	pushl %eax
-	pushl %edi
-	pushl %ecx
-	
-	movl 8(%ebp), %edi
-	movb 12(%ebp), %al
-	movl 16(%ebp), %ecx
-	rep stosb
-
-	popl %ecx
-	popl %ebx
-	popl %eax
-
-	leave
-	ret
