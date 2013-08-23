@@ -4,9 +4,28 @@
 #include "video.h"
 #include "mem.h"
 
-#define VIDEO_RAM_START_ADDR 0xb8000
-#define VIDEO_RAM_SIZE 0x10000
 static int g_video_offset = 0;
+
+#define putc(c) \
+	do { \
+		__asm__(\
+			"addl %0, %%edi\n\t"\
+			"cld\n\t"\
+			"andb %%al, %%al\n\t"\
+			"jz 2f\n\t"\
+			"movb $0xc, %%ah\n\t"\
+			"stosw\n\t"\
+			"addl $2, %0\n\t"\
+			"2:\n\t" \
+			: "=r"(g_video_offset)\
+			: "a"((c)), "D"(VIDEO_RAM_START_ADDR), "0"(g_video_offset));\
+	} while (0)
+
+#define putnl() \
+	do {\
+		g_video_offset = (g_video_offset/SCREEN_LINE_LEN + 1) * SCREEN_LINE_LEN; \
+	} while (0)
+
 
 static void	tw_video_init(void);
 static int	tw_vprintf(const char *fmt, va_list arg_list);
@@ -41,9 +60,8 @@ tw_printf(const char *fmt, ...)
 static int
 tw_vprintf(const char *fmt, va_list arg_list)
 {
-	int before = g_video_offset;
 	char str[64] = {0};
-	int i;
+	int i, len;
 	char c;
 
 	for (i = 0; i < 64 && *fmt != '\0';) {
@@ -78,27 +96,21 @@ tw_vprintf(const char *fmt, va_list arg_list)
 	}
 
 	// out of buffer
-	if (i == 64 && *fmt != '\0') {
+	if (i == 64 && str[i-1] != '\0') {
 		return -1;
 	}
-	
-	/*show the string*/
-	__asm__ (
-			"addl %0, %%edi\n\t"
-			"cld\n\t"
-			"1:\n\t"
-			"lodsb\n\t"
-			"andb %%al, %%al\n\t"
-			"jz 2f\n\t"
-			"movb $0xc, %%ah\n\t"
-			"stosw\n\t"
-			"inc %0\n\t"
-			"jmp 1b\n\t"
-			"2:\n\t"
-			: "=r"(g_video_offset)
-			: "S"(str), "D"(VIDEO_RAM_START_ADDR), "0"(g_video_offset)
-			: "%eax");
-	return g_video_offset - before;
+
+	len = strlen(str);
+	for (i = 0; i < len; i++) {
+		c = str[i];
+		if (c == '\r' || c == '\n') {
+			putnl();
+			continue;
+		}
+		putc(c);
+	}
+
+	return len;
 }
 
 char*
