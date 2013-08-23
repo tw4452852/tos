@@ -133,6 +133,12 @@ tw_itoa(int num, char *buf, char c)
 			return NULL;
 	}
 
+	if (num == 0) {
+		buf[0] = '0';
+		buf[1] = 0;
+		return buf;
+	}
+
 	if (num < 0) {
 		buf[0] = '-';
 		num = -num;

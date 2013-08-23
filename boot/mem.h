@@ -24,9 +24,11 @@
 		} while (0)
 
 typedef struct {
-	long long	base;
-	long long	length;
-	long		type;
+	long	base_low;
+	long	base_high;
+	long	length_low;
+	long	length_high;
+	long	type;
 } mem_desc_s;
 
 void	show_mem_map(void);

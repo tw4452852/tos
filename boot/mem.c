@@ -30,5 +30,14 @@ __asm__(".code32\n\t");
 void
 show_mem_map()
 {
-	tw_printf("there are %d mem descriptors\n", *(long *)MEM_DESC_CNT_ADDR);
+	long cnt = *(long *)MEM_DESC_CNT_ADDR, i;
+	mem_desc_s *descs = (mem_desc_s *)MEM_MAP_ADDR;
+
+	tw_printf("there are %d mem descriptors:\n", cnt);
+	for (i = 0; i < cnt; i++) {
+		tw_printf("start: 0x%x%x, lenth: 0x%x%x, type: %x\n",
+				descs[i].base_high, descs[i].base_low,
+				descs[i].length_high, descs[i].length_low,
+				descs[i].type);
+	}
 }
