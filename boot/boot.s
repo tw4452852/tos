@@ -27,6 +27,8 @@ _start:
 	call print_msg_16
 	addw $2, %sp
 
+	call load_pmem_map
+
 	pushw $100
 	call read_sect
 	addl $2, %esp

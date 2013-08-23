@@ -24,4 +24,3 @@ SECTIONS
 		*(.*)
 	}  > MAIN = 0
 }
-

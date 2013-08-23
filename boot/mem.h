@@ -2,6 +2,9 @@
 
 #define MEM_H
 
+#define MEM_DESC_CNT_ADDR	0x9000
+#define MEM_MAP_ADDR		0x9004
+
 #define tw_memset(d, v, l) \
 		do { \
 			__asm__ ( \
@@ -20,4 +23,11 @@
 					); \
 		} while (0)
 
+typedef struct {
+	long long	base;
+	long long	length;
+	long		type;
+} mem_desc_s;
+
+void	show_mem_map(void);
 #endif /* end of include guard: MEM_H */
