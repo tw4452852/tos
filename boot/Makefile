@@ -1,9 +1,9 @@
 TARGET=boot.bin
-OBJS=boot.o util.o main.o video.o mem.o
+OBJS=boot.o util.o main.o video.o mem.o interrupt.o gdt.o
 LDSCRIPT=boot.ld
 LDFLAGS=-T $(LDSCRIPT)
-ASFLAGS=--32
 CFLAGS=-m32
+ASFLAGS=--32
 HDIMAGE=hd.img
 
 .PHONY: all
