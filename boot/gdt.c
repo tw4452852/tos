@@ -1,4 +1,5 @@
 #include "gdt.h"
+#include "video.h"
 
 static gdt_desc_u gdt[GDT_MAX_DESCS];
 
@@ -20,12 +21,12 @@ gdt_init()
 	gdt_set_desc(DATA_PL0_INDEX, 0, 0xfffff, GDT_DATA_PL0);
 
 	struct {
-		long	addr;
-		u16		limit;
-	} gdtr;
-	gdtr.addr = (long)gdt;
+		u16				limit;
+		unsigned long	addr;
+	} __attribute__ ((packed)) gdtr;
+	gdtr.addr = (unsigned long)gdt;
 	gdtr.limit = GDT_MAX_DESCS * sizeof(gdt_desc_u);
-	__asm__("lgdtl (%0)": : "r"(&gdtr));
+	__asm__("lgdt %0"::"m"(gdtr));
 }
 
 void
