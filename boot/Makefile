@@ -1,9 +1,9 @@
 TARGET=boot.bin
-OBJS=boot.o util.o main.o video.o mem.o interrupt.o gdt.o
+OBJS=boot.o main.o video.o mem.o interrupt.o gdt.o
 LDSCRIPT=boot.ld
 LDFLAGS=-T $(LDSCRIPT)
 CFLAGS=-m32
-ASFLAGS=--32
+ASFLAGS=-m32
 HDIMAGE=hd.img
 
 .PHONY: all
@@ -15,9 +15,6 @@ $(HDIMAGE):
 
 $(TARGET): $(OBJS)
 	ld $(LDFLAGS) -o $@ $+
-
-%.o: %.s
-	as $(ASFLAGS) -o $@ $+
 
 .PHONY: clean
 clean:
