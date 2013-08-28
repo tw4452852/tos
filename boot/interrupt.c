@@ -24,7 +24,6 @@ init_idt()
 	desc.s.sel = SEL_CODE_PL0;
 	desc.s.attr = IDT_ATTR;
 	desc.s.offset_high = ((u32)general_handler>>16) & 0xffff;
-	tw_printf("ldt desc:0x%x%x\n", *((u32 *)(((char *)&desc) + 4)),*((u32 *)&desc));
 
 	for (i = 0; i < IDT_MAX_DESCS; i++) {
 		idt[i] = desc;

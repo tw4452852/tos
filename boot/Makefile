@@ -3,7 +3,7 @@ OBJS=boot.o main.o video.o mem.o interrupt.o gdt.o
 LDSCRIPT=boot.ld
 LDFLAGS=-T $(LDSCRIPT)
 CFLAGS=-m32
-ASFLAGS=-m32
+ASFLAGS=-m32 -D__ASSEMBLY__
 HDIMAGE=hd.img
 
 .PHONY: all

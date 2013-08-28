@@ -1,8 +1,19 @@
-.code16
 .section	.bdata, "aw"
-#include "def.h"
+#include "common.h"
+
+gdt: .quad GDT_DESC(0, 0, 0)
+desc_code32: .quad GDT_DESC(0, 0xffffffff, GDT_CODE_PL0)
+desc_data32: .quad GDT_DESC(0, 0xffffffff, GDT_DATA_PL0)
+.set gdt_len, .-gdt
+.set sel_code32, desc_code32 - gdt
+.set sel_data32, desc_data32 - gdt
+gdt_ptr:
+       .word gdt_len - 1
+gdt_addr:
+       .long 0
 boot_msg: .string "hello bootsec"
 .section	.btext, "ax"
+.code16
 .globl _start
 _start:
 	movw %cs, %ax
@@ -24,35 +35,37 @@ _start:
 	addw $6, %sp
 
 	# setup gdt
-#	xorl %eax, %eax
-#	movw %ds, %ax
-#	sal $4, %eax
-#	addl $gdt, %eax
-#	movl %eax, gdt_addr
-#	lgdt gdt_ptr
-#
-#	# enable protect mode
-#	movl %cr0, %eax
-#	orl $1, %eax
-#	movl %eax, %cr0
-#
-#	ljmp $sel_code32, $_start_32
-#
-#.code32
-#_start_32:
-#	movw $sel_data32, %ax
-#	movw %ax, %ds
-#	movw %ax, %es
-#	movw %ax, %fs
-#	movw %ax, %gs
-#	movw %ax, %ss
-#	movl $0X1000000, %esp # 256byte stack
+	xorl %eax, %eax
+	movw %ds, %ax
+	sal $4, %eax
+	addl $gdt, %eax
+	movl %eax, gdt_addr
+	lgdt gdt_ptr
 
-	ljmp $KERNEL_ADDR_SEG, $KERNEL_ADDR_OFFSET
+	# enable protect mode
+	movl %cr0, %eax
+	orl $1, %eax
+	movl %eax, %cr0
+
+	ljmp $sel_code32, $_start_32
+
+.code32
+_start_32:
+	movw $sel_data32, %ax
+	movw %ax, %ds
+	movw %ax, %es
+	movw %ax, %fs
+	movw %ax, %gs
+	movw %ax, %ss
+	movl $STACK_TOP, %esp # 256byte stack
+
+	call cmain
 
 	# shouldn't reach here
 	jmp .
 
+.code16
+# some helpers in real mode
 # print_msg(char *s)
 .type print_msg_16, @function
 print_msg_16:
