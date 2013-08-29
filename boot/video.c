@@ -34,7 +34,7 @@ static char*	tw_itoa(int num, char *buf, char c);
 static void
 tw_video_init()
 {
-	static has_inited = 0;
+	static int has_inited = 0;
 	
 	if (!has_inited) {
 		tw_memset((char *)VIDEO_RAM_START_ADDR, 0, VIDEO_RAM_SIZE);
@@ -60,60 +60,57 @@ tw_printf(const char *fmt, ...)
 static int
 tw_vprintf(const char *fmt, va_list arg_list)
 {
-	char str[64] = {0};
-	int i, len;
+	char num_str[64] = {0};
+	int shown_char_cnt;
 	char c;
 
-	for (i = 0; i < 64 && *fmt != '\0';) {
+	for (shown_char_cnt = 0; *fmt != '\0';) {
 		c = *fmt++;
 		if (c != '%') {
-			str[i++] = c;
+			if (c == '\n' || c == '\r') {
+				putnl();
+			} else {
+				putc(c);
+			}
+			shown_char_cnt++;
 			continue;
 		}
 		// check the directive
 		c = *fmt++;
-		int num;
+		if (c == '\0') {
+			break;
+		}
 		char *s;
 		switch (c) {
 			case 'd':
 			case 'b':
 			case 'x':
-				num = va_arg(arg_list, int);
-				tw_itoa(num, &str[i], c);
+				s = tw_itoa(va_arg(arg_list, int), num_str, c);
 				break;
 			case 's':
 				s = va_arg(arg_list, char*);
-				tw_memcpy(&str[i], s, strlen(s));
 				break;
 			case '%':
-				str[i++] = '%';
+				putc('%');
+				shown_char_cnt++;
 				// fall through
 			default:
 				// others not support yet
 				continue;
 		}
-		i += strlen(&str[i]);
-	}
-
-	// out of buffer
-	if (i == 64 && str[i-1] != '\0') {
-		return -1;
-	}
-
-	len = strlen(str);
-	for (i = 0; i < len; i++) {
-		c = str[i];
-		if (c == '\r' || c == '\n') {
-			putnl();
-			continue;
+		// show string
+		if (s) {
+			while ((c = *s++) != '\0') {
+				putc(c);
+				shown_char_cnt++;
+			}
 		}
-		putc(c);
 	}
 
-	return len;
+	return shown_char_cnt;
 }
 
-char*
+static char*
 tw_itoa(int num, char *buf, char c)
 {
 	int i, j, v;
@@ -135,7 +132,7 @@ tw_itoa(int num, char *buf, char c)
 
 	if (num == 0) {
 		buf[0] = '0';
-		buf[1] = 0;
+		buf[1] = '\0';
 		return buf;
 	}
 
@@ -151,11 +148,14 @@ tw_itoa(int num, char *buf, char c)
 			buf[i] = v + '0';
 		}
 	}
+	buf[i] = '\0';
+	// revert
 	for (j = i-1, i = 1; j-i >= 1 ; j--, i++) {
 		buf[i] = buf[i] ^ buf[j];
 		buf[j] = buf[i] ^ buf[j];
 		buf[i] = buf[i] ^ buf[j];
 	}
+	// left shift 1 bit if positive
 	if (buf[0] != '-') {
 		for (i = 0; buf[i+1] != '\0'; i++) {
 			buf[i] = buf[i+1];

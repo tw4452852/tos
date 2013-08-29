@@ -57,7 +57,7 @@ _start_32:
 	movw %ax, %fs
 	movw %ax, %gs
 	movw %ax, %ss
-	movl $STACK_TOP, %esp # 256byte stack
+	movl $STACK_TOP, %esp # 16M stack
 
 	call cmain
 

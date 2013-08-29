@@ -4,19 +4,13 @@
 
 #include "common.h"
 
-typedef union {
-	u64 u;
-	struct {
-		u64	offset_low	: 16;
-		u64	sel			: 16;
-		#define IDT_ATTR	(0x8e00 & 0xffff)
-		u64	attr		: 16;
-		u64	offset_high	: 16;
-	} s;
-} idt_desc_u;
+#define IDT_MAX_EXCEPTION	32
+#define IDT_MAX_DESCS (IDT_MAX_EXCEPTION)
+#define EXCEPTION_ERRCODE_MASK  0x00027d00
 
-#define IDT_MAX_DESCS	10
-
+#ifndef __ASSEMBLY__
 void	interrupt_init(void);
+void	interrupt_handler(u32 irq, u32 error_code, u32 eip, u32 cs, u32 eflag);
+#endif
 
 #endif /* end of include guard: INTERRUPT_H */
