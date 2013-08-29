@@ -1,6 +1,7 @@
 #include <stdarg.h>
 #include <string.h>
 
+#include "common.h"
 #include "video.h"
 #include "mem.h"
 
@@ -29,7 +30,7 @@ static int g_video_offset = 0;
 
 static void	tw_video_init(void);
 static int	tw_vprintf(const char *fmt, va_list arg_list);
-static char*	tw_itoa(int num, char *buf, char c);
+static char*	tw_itoa(u32 num, char *buf, char c);
 
 static void
 tw_video_init()
@@ -85,7 +86,7 @@ tw_vprintf(const char *fmt, va_list arg_list)
 			case 'd':
 			case 'b':
 			case 'x':
-				s = tw_itoa(va_arg(arg_list, int), num_str, c);
+				s = tw_itoa(va_arg(arg_list, u32), num_str, c);
 				break;
 			case 's':
 				s = va_arg(arg_list, char*);
@@ -111,7 +112,7 @@ tw_vprintf(const char *fmt, va_list arg_list)
 }
 
 static char*
-tw_itoa(int num, char *buf, char c)
+tw_itoa(u32 num, char *buf, char c)
 {
 	int i, j, v;
 	int base;
@@ -136,9 +137,12 @@ tw_itoa(int num, char *buf, char c)
 		return buf;
 	}
 
-	if (base == 10 && num < 0) {
-		buf[0] = '-';
-		num = -num;
+	if (base == 10) {
+		int d = (int)num;
+		if (d < 0) {
+			buf[0] = '-';
+			num = -d;
+		}
 	}
 	for (i = 1; num > 0; i++, num /= base) {
 		v = num % base;
