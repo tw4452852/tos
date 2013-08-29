@@ -1,5 +1,6 @@
 #include "interrupt.h"
-
+.section	.data
+recursion_flag: .long 0
 .section	.text
 .globl interrupt_handler_start
 interrupt_handler_start:
@@ -17,6 +18,10 @@ i = i + 1
 .endr
 
 exception_handler:
+	cmpl $2, %ss:recursion_flag
+	je hlt_loop
+	incl %ss:recursion_flag
+
 	# 0(sp): irq number
 	# 4(sp): error code
 	# 8(sp): eip
@@ -24,4 +29,10 @@ exception_handler:
 	# 16(sp): eflag
 	call interrupt_handler
 	addl $8, %esp # skip irq number and error code
+
+	decl %ss:recursion_flag
 	iret
+
+hlt_loop:
+	hlt
+	jmp hlt_loop
