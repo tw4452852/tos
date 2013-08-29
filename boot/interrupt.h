@@ -5,7 +5,7 @@
 #include "common.h"
 
 #define IDT_MAX_EXCEPTION	32
-#define IDT_MAX_DESCS (IDT_MAX_EXCEPTION)
+#define IDT_MAX_DESCS 256
 #define EXCEPTION_ERRCODE_MASK  0x00027d00
 
 #ifndef __ASSEMBLY__

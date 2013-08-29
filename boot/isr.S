@@ -5,6 +5,7 @@ recursion_flag: .long 0
 .globl interrupt_handler_start
 interrupt_handler_start:
 i = 0
+# intel reserve exception or fault
 .rept IDT_MAX_EXCEPTION
 	.if (EXCEPTION_ERRCODE_MASK >> i) & 1
 		nop
@@ -12,6 +13,13 @@ i = 0
 	.else
 		pushl $0
 	.endif
+	pushl $i
+	jmp exception_handler
+i = i + 1
+.endr
+# user defined interrupt
+.rept IDT_MAX_DESCS - IDT_MAX_EXCEPTION
+	pushl $0
 	pushl $i
 	jmp exception_handler
 i = i + 1
