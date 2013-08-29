@@ -80,7 +80,7 @@ tw_vprintf(const char *fmt, va_list arg_list)
 		if (c == '\0') {
 			break;
 		}
-		char *s;
+		char *s = NULL;
 		switch (c) {
 			case 'd':
 			case 'b':
@@ -136,7 +136,7 @@ tw_itoa(int num, char *buf, char c)
 		return buf;
 	}
 
-	if (num < 0) {
+	if (base == 10 && num < 0) {
 		buf[0] = '-';
 		num = -num;
 	}
