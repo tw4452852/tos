@@ -1,14 +1,24 @@
 #include "gdt.h"
 #include "interrupt.h"
 #include "video.h"
+#include "apic.h"
 
 static u64 idt[IDT_MAX_DESCS] __attribute__ ((aligned(8)));
+
 static void	init_idt(void);
+
+void
+interrupt_handler(u32 irq, u32 error_code, u32 eip, u32 cs, u32 eflag)
+{
+	tw_printf("recv irq(%d): error_code(0x%x), eip(0x%x), cs(0x%x), eflag(0x%x)\n",
+			irq, error_code, eip, cs, eflag);
+}
 
 void
 interrupt_init()
 {
 	init_idt();
+	apic_init();
 }
 
 // definition in isr.S
@@ -35,9 +45,3 @@ init_idt()
 	);
 }
 
-void
-interrupt_handler(u32 irq, u32 error_code, u32 eip, u32 cs, u32 eflag)
-{
-	tw_printf("recv irq(%d): error_code(0x%x), eip(0x%x), cs(0x%x), eflag(0x%x)\n",
-			irq, error_code, eip, cs, eflag);
-}

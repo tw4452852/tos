@@ -26,6 +26,7 @@ i = i + 1
 .endr
 
 exception_handler:
+	cld
 	cmpl $2, %ss:recursion_flag
 	je hlt_loop
 	incl %ss:recursion_flag

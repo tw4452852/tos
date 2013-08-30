@@ -21,8 +21,4 @@ cmain()
 	tw_printf("%%%s: (%d=0x%x=0b%b)\n", "cmain", 10, 10, 10);
 	show_mem_map();
 	interrupt_init();
-	int i;
-	for (i = 0; i < 10; i++) {
-		__asm__("int $0");
-	}
 }
