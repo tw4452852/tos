@@ -14,7 +14,7 @@ static int g_video_offset = 0;
 			"cld\n\t"\
 			"andb %%al, %%al\n\t"\
 			"jz 2f\n\t"\
-			"movb $0xc, %%ah\n\t"\
+			"movb $0x0a, %%ah\n\t"\
 			"stosw\n\t"\
 			"addl $2, %0\n\t"\
 			"2:\n\t" \
