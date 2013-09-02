@@ -32,4 +32,5 @@ typedef struct {
 } mem_desc_s;
 
 void	show_mem_map(void);
+int	tw_memcmp(char *dst, char *src, int len);
 #endif /* end of include guard: MEM_H */
