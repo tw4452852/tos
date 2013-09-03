@@ -14,7 +14,7 @@ static int g_video_offset = 0;
 			"cld\n\t"\
 			"andb %%al, %%al\n\t"\
 			"jz 2f\n\t"\
-			"movb $0xc, %%ah\n\t"\
+			"movb $0x0a, %%ah\n\t"\
 			"stosw\n\t"\
 			"addl $2, %0\n\t"\
 			"2:\n\t" \
@@ -24,7 +24,8 @@ static int g_video_offset = 0;
 
 #define putnl() \
 	do {\
-		g_video_offset = (g_video_offset/SCREEN_LINE_LEN + 1) * SCREEN_LINE_LEN; \
+		g_video_offset = ((g_video_offset/SCREEN_LINE_LEN + 1) % SCREEN_HEIGHT) * SCREEN_LINE_LEN; \
+		tw_memset(VIDEO_RAM_START_ADDR+g_video_offset, 0, SCREEN_LINE_LEN);\
 	} while (0)
 
 

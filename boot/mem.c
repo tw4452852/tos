@@ -27,6 +27,24 @@ load_pmem_map()
 
 __asm__(".code32\n\t");
 
+int
+tw_memcmp(char *dst, char *src, int len)
+{
+	int ret;
+
+	__asm__(
+			"movl $0, %0\n\t"
+			"cld\n\t"
+			"repe cmpsb\n\t"
+			"je 1f\n\t"
+			"movl $1, %0\n\t"
+			"1:\n\t"
+			: "=r"(ret)
+			: "S"(src), "D"(dst), "c"(len)
+	);
+	return ret;
+}
+
 void
 show_mem_map()
 {
