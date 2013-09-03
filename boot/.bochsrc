@@ -130,6 +130,39 @@ boot: disk
 #=======================================================================
 log: bochsout.txt
 #=======================================================================
+# KEYBOARD:
+# This defines parameters related to the emulated keyboard
+#
+#   TYPE:
+#     Type of keyboard return by a "identify keyboard" command to the
+#     keyboard controller. It must be one of "xt", "at" or "mf".
+#     Defaults to "mf". It should be ok for almost everybody. A known
+#     exception is french macs, that do have a "at"-like keyboard.
+#
+#   SERIAL_DELAY:
+#     Approximate time in microseconds that it takes one character to
+#     be transferred from the keyboard to controller over the serial path.
+#
+#   PASTE_DELAY:
+#     Approximate time in microseconds between attempts to paste
+#     characters to the keyboard controller. This leaves time for the
+#     guest os to deal with the flow of characters.  The ideal setting
+#     depends on how your operating system processes characters.  The
+#     default of 100000 usec (.1 seconds) was chosen because it works 
+#     consistently in Windows.
+#     If your OS is losing characters during a paste, increase the paste
+#     delay until it stops losing characters.
+#
+#   KEYMAP:
+#     This enables a remap of a physical localized keyboard to a
+#     virtualized us keyboard, as the PC architecture expects.
+#
+# Examples:
+#   keyboard: type=mf, serial_delay=200, paste_delay=100000
+#   keyboard: keymap=gui/keymaps/x11-pc-de.map
+#=======================================================================
+keyboard: type=mf, keymap=$BXSHARE/keymaps/x11-pc-us.map
+#=======================================================================
 # CPU:
 # This defines cpu-related parameters inside Bochs:
 #

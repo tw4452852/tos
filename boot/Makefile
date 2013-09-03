@@ -1,5 +1,5 @@
 TARGET=boot.bin
-OBJS=boot.o main.o video.o mem.o interrupt.o gdt.o isr.o apic.o
+OBJS=boot.o main.o video.o mem.o interrupt.o gdt.o isr.o apic.o io.o keyboard.o
 LDSCRIPT=boot.ld
 LDFLAGS=-T $(LDSCRIPT)
 CFLAGS=-m32

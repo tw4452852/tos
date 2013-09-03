@@ -3,6 +3,7 @@
 #define APIC_H
 
 void	apic_init(void);
+void	apic_eoi(u32 irq);
 
 #define _LAPIC_ID_OFFSET	0x20
 #define _LAPIC_VER_OFFSET	0x30
@@ -34,4 +35,5 @@ void	apic_init(void);
 #define _LAPIC_WRITE_REG(base, offset, v) (*(u32 *)((base) + (offset)) = (v))
 
 #define _RSDP_STR	"RSD PTR "
+#define _APIC_STR	"APIC"
 #endif /* end of include guard: APIC_H */
