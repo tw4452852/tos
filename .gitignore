@@ -1,6 +1,7 @@
 *.txt
 *.swp
 *.o
+*.d
 boot.bin
 hd.img
 orange/

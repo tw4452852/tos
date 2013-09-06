@@ -5,7 +5,7 @@
 #include "mem.h"
 
 static u64 idt[IDT_MAX_DESCS] __attribute__ ((aligned(8)));
-static intr_handler_s handlers[IDT_MAX_DESCS] = {0};
+static intr_handler_s handlers[IDT_MAX_DESCS] = {{0}};
 
 static void	init_idt(void);
 

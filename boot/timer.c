@@ -39,8 +39,8 @@ get_hz()
 	timer_enable();
 
 	// initialize PIT channel 2 in one-shot mode
-	// waiting 1/100 sec 
-	outb(0x61, inb(0x61)&0xfd | 1);
+	// waiting 1/100 sec
+	outb(0x61, (inb(0x61)&0xfd)|1);
 	outb(0x43, 0xb2);
 	// 1193182/100 = 11932 = 0x2e9c
 	outb(0x42, 0x9c); // lsb

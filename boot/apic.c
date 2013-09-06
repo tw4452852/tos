@@ -3,6 +3,7 @@
 #include "video.h"
 #include "string.h"
 #include "io.h"
+#include "mem.h"
 
 static u32 lapic_base_addr;
 static u32 ioapic_base_addr = 0;
