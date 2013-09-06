@@ -3,6 +3,7 @@
 #include "mem.h"
 #include "interrupt.h"
 #include "keyboard.h"
+#include "timer.h"
 
 #define reload_segs(data) \
 	__asm__( \
@@ -23,4 +24,11 @@ cmain()
 	show_mem_map();
 	interrupt_init();
 	keyboard_init();
+	timer_init();
+
+	// set a 1s one-shot timer for test
+	timer_config_s tc;
+	tc.mode = TIMER_MODE_ONESHOT;
+	tc.time_ms = 1000;
+	timer_config(&tc);
 }

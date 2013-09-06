@@ -3,12 +3,10 @@
 #include "video.h"
 #include "string.h"
 #include "io.h"
+#include "mem.h"
 
 static u32 lapic_base_addr;
 static u32 ioapic_base_addr = 0;
-
-#define lapic_read_reg(offset) _LAPIC_READ_REG(lapic_base_addr, offset)
-#define lapic_write_reg(offset, v) _LAPIC_WRITE_REG(lapic_base_addr, offset, v)
 
 static void get_lapic_base_addr(void);
 static void	show_all_lapic_regs(void);
@@ -19,6 +17,20 @@ static void detect_ioapic(void);
 static u32	ioapic_read(u32 index);
 static void	ioapic_write(u32 index, u32 value);
 static void	switch_to_apic(void);
+
+#define _LAPIC_READ_REG(base, offset) (*(u32 *)((base) + (offset)))
+#define _LAPIC_WRITE_REG(base, offset, v) (*(u32 *)((base) + (offset)) = (v))
+u32 inline
+lapic_read_reg(u32 offset)
+{
+	return _LAPIC_READ_REG(lapic_base_addr, offset);
+}
+
+void
+lapic_write_reg(u32 offset, u32 v)
+{
+	_LAPIC_WRITE_REG(lapic_base_addr, offset, v);
+}
 
 void
 apic_eoi(u32 irq)
@@ -39,8 +51,6 @@ void
 lapic_init()
 {
 	get_lapic_base_addr();
-	// inhibite the softints
-	//lapic_write_reg(_LAPIC_TPR_OFFSET, 0x30);
 	// local interrupt 0 is a external interrupts
 	lapic_write_reg(_LAPIC_LINT0_OFFSET, 0x8700);
 	// local interrupt 1 is a nmi
@@ -57,7 +67,6 @@ get_lapic_base_addr()
 			:"=a"(lapic_base_addr)
 			:"c"(0x1b)
 	);
-	tw_printf("apic: 0x%x\n", lapic_base_addr);
 	// clear lowest 12 bit
 	lapic_base_addr &= 0xfffff000;
 }
@@ -202,7 +211,6 @@ detect_ioapic()
 		return;
 	}
 
-	tw_printf("0x%x\n", (u32)(rsdt_header->entries[i]));
 	// find io-apic
 	struct ioapic_head {
 		u8 type;
