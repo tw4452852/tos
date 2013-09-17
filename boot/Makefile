@@ -19,8 +19,8 @@ all: $(BINFILE) $(HDIMAGE)
 $(HDIMAGE):
 	dd if=/dev/zero of=$@ bs=1M count=32
 
-$(BINFILE): $(OBJFILES)
-	ld $(LDFLAGS) -o $@ $+
+$(BINFILE): $(OBJFILES) $(LDSCRIPT)
+	ld $(LDFLAGS) -o $@ $(OBJFILES)
 
 clean:
 	-@rm -fr $(OBJFILES) $(DEPFILES) $(BINFILE)
