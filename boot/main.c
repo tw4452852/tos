@@ -21,8 +21,8 @@ cmain()
 	gdt_init();
 	reload_segs(SEL_DATA_PL0);
 	tw_printf("%%%s: (%d=0x%x=0b%b)\n", "cmain", 10, 10, 10);
-	show_mem_map();
 	interrupt_init();
+	mem_init();
 	keyboard_init();
 	timer_init();
 

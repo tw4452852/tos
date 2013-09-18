@@ -25,7 +25,7 @@ gdt_init()
 	} __attribute__ ((packed)) gdtr;
 	gdtr.addr = (unsigned long)gdt;
 	gdtr.limit = GDT_MAX_DESCS * sizeof(u64);
-	__asm__("lgdt %0"::"m"(gdtr));
+	__asm__ __volatile__("lgdt %0"::"m"(gdtr));
 }
 
 inline void
