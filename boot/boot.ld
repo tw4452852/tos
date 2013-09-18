@@ -5,6 +5,7 @@ MEMORY
 {
 	BOOT : ORIGIN = 0x7c00, LENGTH = 512
 	MAIN : ORIGIN = 0X10000, LENGTH = 16M
+	PAGE : ORIGIN = 0X100000, LENGTH = 8M
 }
 SECTIONS
 {
@@ -23,4 +24,10 @@ SECTIONS
 		*(.text)
 		*(.*)
 	}  > MAIN = 0
+
+	.page :
+	{
+		_cmain_end = .;
+	} > PAGE = 0
+
 }
