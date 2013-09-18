@@ -85,7 +85,6 @@ setup_page()
 	long cnt = *(long *)MEM_DESC_CNT_ADDR;
 	mem_desc_s *descs = (mem_desc_s *)MEM_MAP_ADDR;
 
-	tw_printf("0x%x, 0x%x\n", page_dir, page_tbl);
 	// setup blank page directory
 	for (i = 0; i < 1024; i++) {
 		page_dir[i] = (u32)(&page_tbl[i*1024]) | 2;
