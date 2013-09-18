@@ -56,7 +56,7 @@ init_idt()
 	} __attribute__ ((packed)) idtr;
 	idtr.addr = (u32)idt;
 	idtr.limit = IDT_MAX_DESCS * sizeof(u64);
-	__asm__(
+	__asm__ __volatile__(
 			"cli\n\t"
 			"lidt %0\n\t"
 			::"m"(idtr)
